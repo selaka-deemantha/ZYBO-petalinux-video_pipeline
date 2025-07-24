@@ -131,4 +131,3 @@
     compatible = "generic-uio";
     status = "okay";
 };
-

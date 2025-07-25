@@ -6,6 +6,12 @@
     chosen {
         bootargs = "console=ttyPS0,115200 earlyprintk root=/dev/mmcblk0p2 rw rootwait uio_pdrv_genirq.of_id=generic-uio video=HDMI-A-1:1280x720M-24@60";
     };
+    
+    usb_phy0: usb-phy@0 {
+        compatible = "usb-nop-xceiv";
+        #phy-cells = <0>;
+        drv-vbus;
+    };
 };
 
 &amba_pl {
@@ -130,5 +136,11 @@
 &axi_gpio_hdmi {
     compatible = "generic-uio";
     status = "okay";
+};
+
+&usb0 {
+    status = "okay";
+    dr_mode = "host";
+    usb-phy = <&usb_phy0>;
 };
 

@@ -10,3 +10,6 @@ pre-built/linux/
 *.log
 /components/plnx_workspace
 /components/yocto
+fb_code
+bsps
+test_drivers_temp

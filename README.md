@@ -22,5 +22,7 @@ The PetaLinux project configures the Linux kernel, device tree, and rootfs to su
 ## 🟢 How to Build & Run
 1. **Clone the repository**
    ```bash
-   git clone -b <branch-name> https://github.com/<user>/<repo>.git
+   git clone -b working_vga_pipeline git@github.com:selaka-deemantha/ZYBO-petalinux-video_pipeline.git
    cd <repo>
+
+   iasjfoiasoifja

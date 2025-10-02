@@ -1,0 +1,116 @@
+/include/ "system-conf.dtsi"
+#include <dt-bindings/gpio/gpio.h>
+
+/ {
+    chosen {
+        bootargs = "console=ttyPS0,115200 earlyprintk root=/dev/mmcblk0p2 rw rootwait uio_pdrv_genirq.of_id=generic-uio video=VGA-1:640x480M-24@60";
+    };
+
+    usb_phy0: usb-phy@0 {
+        compatible = "usb-nop-xceiv";
+        #phy-cells = <0>;
+        drv-vbus;
+    };
+};
+
+&amba_pl {
+
+    xlnx_pl_disp {
+        compatible = "xlnx,pl-disp";
+        device-id = <0xaa01>;
+        dmas = <&axi_vdma_0 0>;
+        dma-names = "dma0";
+        xlnx,bridge = <&v_tc_0>; 
+        xlnx,edid = "disable";        /* no HDMI EDID */
+        xlnx,vformat = "RG24";
+        display = <&vga_conn>;        /* now points to VGA connector */
+        status = "okay";
+
+        display-timings {
+            native-mode = "mode_640x480";
+            mode_640x480: mode_640x480 {
+                clock-frequency = <25175000>; /* 25.175 MHz typical for VGA */
+                hactive = <640>;
+                vactive = <480>;
+                hfront-porch = <16>;
+                hback-porch = <48>;
+                hsync-len = <96>;
+                vfront-porch = <10>;
+                vback-porch = <33>;
+                vsync-len = <2>;
+                hsync-active = <0>;
+                vsync-active = <0>;
+                de-active = <1>;
+                pixelclk-active = <0>;
+            };
+        };
+
+        port@0 {
+            reg = <0>;
+            pl_disp_ep: endpoint {
+                remote-endpoint = <&vga_in_ep>;
+            };
+        };
+    };
+
+    /* Minimal VGA connector */
+    vga_conn: connector {
+        compatible = "vga-connector-minimal";
+        label = "vga";
+        type = "vga";
+        max-hres = <640>;
+        max-vres = <480>;
+        clocks = <&axi_dynclk_0>;
+        clock-names = "clk";  
+
+        port {
+            vga_in_ep: endpoint {
+                remote-endpoint = <&pl_disp_ep>;
+            };
+        };
+    };
+
+    dynclk_test {
+        compatible = "dyn,dynclk-test";
+        clocks = <&axi_dynclk_0>;
+        clock-names = "axi_dynclk";
+        reg = <0x43c20000 0x1000>;
+        status = "okay";
+    };
+};
+
+&axi_vdma_0 {
+    dma-ranges = <0x00000000 0x00000000 0x40000000>;
+    device-id = <0xaa02>;
+    status = "okay";
+    xlnx,vsize = <480>;
+    xlnx,hsize = <640>;
+    xlnx,stride = <1920>; /* 640 * 3 for RGB24 */
+};
+
+&axi_dynclk_0 {
+    compatible = "dglnt,axi-dynclk";
+    #clock-cells = <0>;
+    xlnx,krefclkfreqhz = <100000000>;
+    xlnx,kversionminor = <2>;
+    xlnx,rable = <0>;
+    xlnx,ip-name = "axi_dynclk";
+    clocks = <&clkc 15>, <&clkc 15>;
+    clock-names = "REF_CLK_I", "s_axi_lite_aclk";
+    clock-output-names = "clk";
+    status = "okay";
+    xlnx,name = "axi_dynclk_0";
+};
+
+&v_tc_0 {
+    compatible = "xlnx,bridge-v-tc-6.1";
+    xlnx,pixels-per-clock = <1>;
+    status = "okay";
+};
+
+&usb0 {
+    status = "okay";
+    dr_mode = "host";
+    usb-phy = <&usb_phy0>;
+};
+

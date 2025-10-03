@@ -1,1 +1,0 @@
-cmd_/home/selaka/petalinux/2021.2/fb_reset_gpio/test_drivers_temp/Module.symvers := sed 's/ko$$/o/' /home/selaka/petalinux/2021.2/fb_reset_gpio/test_drivers_temp/modules.order | scripts/mod/modpost -m    -o /home/selaka/petalinux/2021.2/fb_reset_gpio/test_drivers_temp/Module.symvers -e -i Module.symvers   -T -
